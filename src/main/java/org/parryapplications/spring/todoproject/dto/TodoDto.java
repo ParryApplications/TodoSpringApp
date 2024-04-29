@@ -1,24 +1,14 @@
-package org.parryapplications.spring.todoproject.model;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+package org.parryapplications.spring.todoproject.dto;
 
 import java.time.LocalDate;
 
-@Entity
-public class Todo {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TodoDto {
     private Integer id;
     private String description;
     private LocalDate targetedDate;
     private boolean isCompleted;
 
-
-    public Todo() {
+    public TodoDto() {
     }
 
     public Integer getId() {
@@ -55,7 +45,7 @@ public class Todo {
 
     @Override
     public String toString() {
-        return "Todo{" +
+        return "TodoDto{" +
                 "id=" + id +
                 ", description='" + description + '\'' +
                 ", targetedDate=" + targetedDate +
