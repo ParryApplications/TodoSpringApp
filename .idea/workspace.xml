@@ -5,13 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e47f840f-b801-47e3-a13e-f7758813e454" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/parryapplications/spring/todoproject/dto/TodoDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/parryapplications/spring/todoproject/util/CommonUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/parryapplications/todoTest/ServiceImplTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/parryapplications/spring/todoproject/Controller/TodoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/parryapplications/spring/todoproject/Controller/TodoWebserviceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/parryapplications/spring/todoproject/TodoSpringApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/parryapplications/spring/todoproject/TodoSpringApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/parryapplications/spring/todoproject/dto/TodoDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/parryapplications/spring/todoproject/dto/TodoDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/parryapplications/spring/todoproject/model/Todo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/parryapplications/spring/todoproject/model/Todo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/parryapplications/spring/todoproject/service/TodoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/parryapplications/spring/todoproject/service/TodoServiceImpl.java" afterDir="false" />
     </list>
@@ -48,6 +45,9 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.TodoSpringApplication.executor": "Debug",
+    "JUnit.ServiceImplTest.calculatorTest.executor": "Run",
+    "JUnit.ServiceImplTest.executor": "Run",
+    "JUnit.ServiceImplTest.updateTodoTest.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -58,10 +58,10 @@
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
     "settings.build.tools.auto.reload": "ALL",
-    "settings.editor.selected.configurable": "advanced.settings"
+    "settings.editor.selected.configurable": "terminal"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.ServiceImplTest.updateTodoTest">
     <configuration name="TodoSpringApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.parryapplications.spring.todoproject.TodoSpringApplication" />
       <module name="TodoSpringApplication" />
@@ -75,8 +75,58 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ServiceImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="TodoSpringApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.parryapplications.todoTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.parryapplications.todoTest" />
+      <option name="MAIN_CLASS_NAME" value="org.parryapplications.todoTest.ServiceImplTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServiceImplTest.calculatorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="TodoSpringApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.parryapplications.todoTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.parryapplications.todoTest" />
+      <option name="MAIN_CLASS_NAME" value="org.parryapplications.todoTest.ServiceImplTest" />
+      <option name="METHOD_NAME" value="calculatorTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServiceImplTest.updateTodoTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="TodoSpringApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.parryapplications.todoTest.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.parryapplications.todoTest" />
+      <option name="MAIN_CLASS_NAME" value="org.parryapplications.todoTest.ServiceImplTest" />
+      <option name="METHOD_NAME" value="updateTodoTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ServiceImplTest.updateTodoTest" />
+        <item itemvalue="JUnit.ServiceImplTest" />
+        <item itemvalue="JUnit.ServiceImplTest.calculatorTest" />
         <item itemvalue="Application.TodoSpringApplication" />
       </list>
     </recent_temporary>

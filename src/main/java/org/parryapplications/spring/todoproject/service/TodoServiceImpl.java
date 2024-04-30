@@ -51,7 +51,7 @@ public class TodoServiceImpl {
 
     public TodoDto getTodoById(Integer id){
         Optional<Todo> opTodo = todoRepository.findById(id);
-        if(opTodo.isPresent()){
+        if(opTodo.isPresent()) {
             logger.info("Retrieved Todo By Id");
             return commonUtil.convertTodoModelToTodoDto(opTodo.get());
         }
@@ -87,6 +87,7 @@ public class TodoServiceImpl {
 
             //Checking if this todo is existed for modify operation:
             if (!ObjectUtils.isEmpty(todoModelById)) {
+                logger.info("Updating Todo...");
                 Todo todoModel = todoRepository.save(commonUtil.convertTodoDtoToTodoModel(todoDto));
                 logger.info("Todo updated successfully");
                 return commonUtil.convertTodoModelToTodoDto(todoModel);

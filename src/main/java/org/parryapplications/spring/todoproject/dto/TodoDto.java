@@ -11,6 +11,13 @@ public class TodoDto {
     public TodoDto() {
     }
 
+    public TodoDto(Integer id, String description, LocalDate targetedDate, boolean isCompleted) {
+        this.id = id;
+        this.description = description;
+        this.targetedDate = targetedDate;
+        this.isCompleted = isCompleted;
+    }
+
     public Integer getId() {
         return id;
     }
