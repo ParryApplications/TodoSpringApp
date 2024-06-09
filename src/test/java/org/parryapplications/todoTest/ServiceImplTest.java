@@ -48,7 +48,7 @@ class ServiceImplTest {
         Todo todoModel = new Todo(1,"Test Data", LocalDate.now().plusYears(1), false);
         Optional<Todo> todoOptional = Optional.of(todoModel);
 
-        //Mockito example:
+        //Stubs example:
         when(todoRepository.findById(anyInt())).thenReturn(todoOptional);
         when(commonUtil.convertTodoModelToTodoDto(any(Todo.class))).thenReturn(todoDto);
         when(commonUtil.convertTodoDtoToTodoModel(any(TodoDto.class))).thenReturn(todoModel);

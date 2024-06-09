@@ -13,15 +13,15 @@ public class TodoSpringApplication {
         SpringApplication.run(TodoSpringApplication.class, args);
     }
 
-    @Bean
-    public WebMvcConfigurer configCorsMappings() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").
-                        allowedMethods("*").
-                        allowedOrigins("http://localhost:3000/");
-            }
-        };
-    }
+//    @Bean
+//    public WebMvcConfigurer configCorsMappings() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**").
+//                        allowedMethods("*").
+//                        allowedOrigins("http://localhost:3000/");
+//            }
+//        };
+//    }
 }

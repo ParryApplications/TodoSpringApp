@@ -1,12 +1,21 @@
 package org.parryapplications.spring.todoproject.dto;
 
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 
 public class TodoDto {
     private Integer id;
+    @Size(min = 5)
     private String description;
+    @Future
     private LocalDate targetedDate;
     private boolean isCompleted;
+    @NotNull
+    @Size(min = 5)
+    private String username;
 
     public TodoDto() {
     }
@@ -50,6 +59,14 @@ public class TodoDto {
         isCompleted = completed;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Override
     public String toString() {
         return "TodoDto{" +
@@ -57,6 +74,7 @@ public class TodoDto {
                 ", description='" + description + '\'' +
                 ", targetedDate=" + targetedDate +
                 ", isCompleted=" + isCompleted +
+                ", username='" + username + '\'' +
                 '}';
     }
 }

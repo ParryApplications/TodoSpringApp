@@ -16,7 +16,7 @@ public class Todo {
     private String description;
     private LocalDate targetedDate;
     private boolean isCompleted;
-
+    private String username;
 
     public Todo() {
     }
@@ -60,6 +60,14 @@ public class Todo {
         isCompleted = completed;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Override
     public String toString() {
         return "Todo{" +
@@ -67,6 +75,7 @@ public class Todo {
                 ", description='" + description + '\'' +
                 ", targetedDate=" + targetedDate +
                 ", isCompleted=" + isCompleted +
+                ", username='" + username + '\'' +
                 '}';
     }
 }
