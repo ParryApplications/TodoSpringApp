@@ -3,13 +3,10 @@ package org.parryapplications.spring.todoproject.Controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import jdk.jfr.Enabled;
 import org.parryapplications.spring.todoproject.customAnnotations.TimeComplexityCalculator;
 import org.parryapplications.spring.todoproject.dto.TodoDto;
-import org.parryapplications.spring.todoproject.model.Todo;
 import org.parryapplications.spring.todoproject.service.TodoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
@@ -53,11 +50,12 @@ public class TodoWebserviceImpl {
     @DeleteMapping("/{username}/todos/{id}")
     @PreAuthorize("#username == authentication.name")
     @TimeComplexityCalculator //AOP
-    public void deleteTodoById(@PathVariable @NotNull @Size(min = 5) String username, @PathVariable("id") Integer id) {
-        todoService.deleteTodoById(username, id);
+    public String deleteTodoById(@PathVariable @NotNull @Size(min = 5) String username, @PathVariable("id") Integer id) {
+        return todoService.deleteTodoById(username, id);
     }
 
     @PutMapping("/todos")
+    @PreAuthorize("#todoDto.username == authentication.name")
     @TimeComplexityCalculator //AOP
     public TodoDto updateTodo(@Valid @RequestBody TodoDto todoDto) {
         return todoService.updateTodo(todoDto);
@@ -72,9 +70,17 @@ public class TodoWebserviceImpl {
 
     //For Admins only:
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/todos")
+    @DeleteMapping("/allTodos")
     @TimeComplexityCalculator //AOP
-    public String deleteAllTodos() {
-        return todoService.deleteAllTodos();
+    public String deleteAllTodos_AdminsOnly() {
+        return todoService.deleteAllTodos_AdminsOnly();
+    }
+
+    //For Admins only:
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/allTodos")
+    @TimeComplexityCalculator //AOP
+    public List<TodoDto> getAllTodos_AdminsOnly() {
+        return todoService.getAllTodos_AdminsOnly();
     }
 }

@@ -1,8 +1,6 @@
 package org.parryapplications.spring.todoproject.aop;
 
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 /**
  * This Class is used for Pointcut configuration for maintenance and reuse purpose as an AOP Best Practice

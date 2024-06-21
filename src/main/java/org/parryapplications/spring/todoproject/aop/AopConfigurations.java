@@ -7,10 +7,7 @@ import org.parryapplications.spring.todoproject.dto.ResultSet;
 import org.parryapplications.spring.todoproject.dto.TodoDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.server.resource.introspection.SpringOpaqueTokenIntrospector;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
@@ -24,7 +21,7 @@ public class AopConfigurations {
 
     private final Logger logger = LoggerFactory.getLogger(AopConfigurations.class);
 
-    @Before("org.parryapplications.spring.todoproject.aop.TodoServiceImplMethodsConfig()")
+    @Before("org.parryapplications.spring.todoproject.aop.PointcutConfigurations.TodoServiceImplMethodsConfig()")
     public void loggingBeforeBizLogicExecuted(JoinPoint joinPoint) {
         logger.info("{} method starting executing...", joinPoint);
 //        logger.info("{} method starting executing...",joinPoint.getSignature());
@@ -35,7 +32,7 @@ public class AopConfigurations {
     }
 
     //TODO: Note: Below method calling but not impacting the response (Need to check why response not modified):
-    @AfterReturning(pointcut = "org.parryapplications.spring.todoproject.aop.TodoWebserviceImplMethod_RtTodoDtoConfig()", returning = "successResult")
+    @AfterReturning(pointcut = "org.parryapplications.spring.todoproject.aop.PointcutConfigurations.TodoWebserviceImplMethod_RtTodoDtoConfig()", returning = "successResult")
     public ResultSet<TodoDto> addingResultSetToSuccessResult(TodoDto successResult) {
 //        logger.info("addingResultSetToSuccessResult() executed");
         if (!ObjectUtils.isEmpty(successResult)) {
@@ -46,7 +43,7 @@ public class AopConfigurations {
     }
 
     //TODO: Note: Below method calling but not impacting the response (Need to check why response not modified):
-    @AfterReturning(pointcut = "org.parryapplications.spring.todoproject.aop.TodoWebserviceImplMethod_RtListOfTodoDtosConfig()", returning = "successResults")
+    @AfterReturning(pointcut = "org.parryapplications.spring.todoproject.aop.PointcutConfigurations.TodoWebserviceImplMethod_RtListOfTodoDtosConfig()", returning = "successResults")
     public ResultSet<List<TodoDto>> addingResultSetsToSuccessResults(List<TodoDto> successResults) {
 //        logger.info("addingResultSetsToSuccessResults() executed");
         if (!CollectionUtils.isEmpty(successResults))
@@ -55,14 +52,14 @@ public class AopConfigurations {
         return new ResultSet<>(successResults,0, "Operations completed successfully");
     }
 
-    @AfterThrowing(pointcut = "org.parryapplications.spring.todoproject.aop.TodoJpaRepositoryMethodConfig()", throwing = "exceptionHandler")
+    @AfterThrowing(pointcut = "org.parryapplications.spring.todoproject.aop.PointcutConfigurations.TodoJpaRepositoryMethodConfig()", throwing = "exceptionHandler")
     public void loggingExceptionOnDaoLayer(JoinPoint joinPoint, Exception exceptionHandler) {
         logger.error("Weaver Captured an Exception:");
-        logger.error("Exception captured under : {}\n --> Exception Info: {}", joinPoint, exceptionHandler.getMessage());
+        logger.error("Exception captured under : {}\n --> Exception Info: {}", joinPoint, exceptionHandler);
     }
 
-    @Around("org.parryapplications.spring.todoproject.aop.TimeComplexityCalculatorConfig()")
-    public Object timeComplexityCalculator(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    @Around("org.parryapplications.spring.todoproject.aop.PointcutConfigurations.TimeComplexityCalculatorConfig()")
+    public Object timeComplexityCalculatorLogic(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         Instant startTime = Instant.now();
 
         Object result = proceedingJoinPoint.proceed();

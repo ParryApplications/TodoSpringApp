@@ -50,7 +50,7 @@ public class JwtSecurityConfiguration {
 //        httpSecurity.authorizeHttpRequests(req -> req.requestMatchers("admins/todos/**").hasRole("ADMIN"));
         httpSecurity.httpBasic(Customizer.withDefaults());
 //        httpSecurity.httpBasic(AbstractHttpConfigurer::disable);
-        httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//        httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         return httpSecurity.build();

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +56,7 @@ public class TodoServiceImpl {
         }
 
         logger.info("No todo with ID: " + id + " found from your Data");
-        return null;
+        return new TodoDto();//sending empty object back
 
         //        Predicate<? super Todo> predicate = todo -> todo.getId().equals(id);
 //        return todoList.stream().filter(predicate).findAny().orElse(null);
@@ -68,14 +70,19 @@ public class TodoServiceImpl {
 
     public String deleteTodoById(String username, Integer id) {
         try {
-            if(getTodoById(username, id) != null)
+            if (getTodoById(username, id).getId() != null) {
                 todoRepository.deleteById(id);
+                logger.info("Todo deleted successfully");
+            } else {
+                logger.info("Todo with id:{}, not found!", id);
+                return "Todo with ID: " + id + ", not found!";
+            }
 //            todoList.removeIf((todo) -> todo.getId().equals(id));
         } catch (Exception e) {
             logger.error("Error while delete todo id : {} :: {} ", id, e.getMessage());
             return "Error while deleting todo id : " + id;
         }
-        logger.info("Todo deleted successfully");
+
         return id + " : Todo Deleted Successfully";
     }
 
@@ -102,25 +109,49 @@ public class TodoServiceImpl {
 
     @Transactional
     public String deleteAllTodosByUsername(String username) {
+        int count = 0;
         try {
-            int count = todoRepository.deleteAllByUsername(username);
-            logger.info(count + " - Counts have been deleted");
+            count = todoRepository.deleteAllByUsername(username);
+
+
+            if (count > 0)
+                logger.info(count + " - Todos Count have been deleted");
+            else {
+                logger.info("No Todos existed from {}", username);
+                return count + " Todos found, Nothing for deletion";
+            }
         } catch (Exception e) {
-            logger.error("Error while deleting all todos by username :: ",e);
+            logger.error("Error while deleting all todos by username :: ", e);
             return "Error while deleting all todos by username";
         }
-        logger.info("All todos as per username have been deleted successfully");
-        return "All " +username+ " Todos Deleted Successfully";
+
+        return count + " Todos found, All Deleted Successfully";
     }
 
     @Transactional
-    public String deleteAllTodos() {
-        try{
+    public String deleteAllTodos_AdminsOnly() {
+        try {
             todoRepository.deleteAll();
-        } catch (Exception e){
-            logger.error("Error while deleting all todos :: ",e);
+            logger.info("All Todos deleted successfully");
+        } catch (Exception e) {
+            logger.error("Error while deleting all todos :: ", e);
             return "Error while deleting all todos";
         }
         return "All Todos deleted successfully";
+    }
+
+    public List<TodoDto> getAllTodos_AdminsOnly() {
+        List<TodoDto> resultTodos = new ArrayList<>();
+        try {
+            for (Todo model : todoRepository.findAll()) {
+                TodoDto dto = commonUtil.convertTodoModelToTodoDto(model);
+                resultTodos.add(dto);
+            }
+        } catch (Exception e) {
+            logger.error("Error while retrieving all todos :: ", e);
+            return Collections.emptyList();
+        }
+        logger.info("All Todos retrieved successfully");
+        return resultTodos;
     }
 }
