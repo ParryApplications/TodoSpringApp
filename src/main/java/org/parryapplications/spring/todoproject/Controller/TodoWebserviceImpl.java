@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jdk.jfr.Enabled;
+import org.parryapplications.spring.todoproject.customAnnotations.TimeComplexityCalculator;
 import org.parryapplications.spring.todoproject.dto.TodoDto;
 import org.parryapplications.spring.todoproject.model.Todo;
 import org.parryapplications.spring.todoproject.service.TodoServiceImpl;
@@ -24,49 +25,56 @@ public class TodoWebserviceImpl {
     private final TodoServiceImpl todoService;
 
     @Autowired
-    public TodoWebserviceImpl(TodoServiceImpl todoService){
+    public TodoWebserviceImpl(TodoServiceImpl todoService) {
         this.todoService = todoService;
     }
 
     @PostMapping("/todos")
     @PreAuthorize("#todoDto.username == authentication.name")
-    public TodoDto createTodo(@Valid @RequestBody TodoDto todoDto){
+    @TimeComplexityCalculator //AOP
+    public TodoDto createTodo(@Valid @RequestBody TodoDto todoDto) {
         return todoService.createTodo(todoDto);
     }
 
     @GetMapping("{username}/todos/{id}")
     @PreAuthorize("#username == authentication.name")
-    public TodoDto getTodoById(@PathVariable @NotNull @Size(min = 5) String username, @PathVariable("id") @NotNull Integer id){
+    @TimeComplexityCalculator //AOP
+    public TodoDto getTodoById(@PathVariable @NotNull @Size(min = 5) String username, @PathVariable("id") @NotNull Integer id) {
         return todoService.getTodoById(username, id);
     }
 
     @GetMapping("/{username}/todos")
     @PreAuthorize("#username == authentication.name")
-    public List<TodoDto> getAllTodos(@PathVariable @NotNull @Size(min = 5) String username){
+    @TimeComplexityCalculator //AOP
+    public List<TodoDto> getAllTodos(@PathVariable @NotNull @Size(min = 5) String username) {
         return todoService.getAllTodos(username);
     }
 
     @DeleteMapping("/{username}/todos/{id}")
     @PreAuthorize("#username == authentication.name")
-    public void deleteTodoById(@PathVariable @NotNull @Size(min = 5) String username, @PathVariable("id") Integer id){
+    @TimeComplexityCalculator //AOP
+    public void deleteTodoById(@PathVariable @NotNull @Size(min = 5) String username, @PathVariable("id") Integer id) {
         todoService.deleteTodoById(username, id);
     }
 
     @PutMapping("/todos")
-    public TodoDto updateTodo(@Valid @RequestBody TodoDto todoDto){
+    @TimeComplexityCalculator //AOP
+    public TodoDto updateTodo(@Valid @RequestBody TodoDto todoDto) {
         return todoService.updateTodo(todoDto);
     }
 
     @DeleteMapping("/{username}/todos")
     @PreAuthorize("#username == authentication.name")
-    public String deleteAllTodosByUsername(@PathVariable @NotNull @Size(min = 5) String username){
+    @TimeComplexityCalculator //AOP
+    public String deleteAllTodosByUsername(@PathVariable @NotNull @Size(min = 5) String username) {
         return todoService.deleteAllTodosByUsername(username);
     }
 
     //For Admins only:
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/todos")
-    public String deleteAllTodos(){
+    @TimeComplexityCalculator //AOP
+    public String deleteAllTodos() {
         return todoService.deleteAllTodos();
     }
 }

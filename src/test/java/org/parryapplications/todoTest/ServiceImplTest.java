@@ -10,8 +10,6 @@ import org.parryapplications.spring.todoproject.model.Todo;
 import org.parryapplications.spring.todoproject.repository.TodoJpaRepository;
 import org.parryapplications.spring.todoproject.service.TodoServiceImpl;
 import org.parryapplications.spring.todoproject.util.CommonUtil;
-import org.slf4j.Logger;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -24,6 +22,13 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ServiceImplTest {
 
+
+    //Note:
+    /*
+    @Mock is nothing but the dependency and @InjectMocks is where dependency injection will perform.
+    Make sure the method which u are going to test, whichever method it is calling put when().then() first as per the order.
+     */
+
     @InjectMocks
     private TodoServiceImpl todoServiceImpl;
 
@@ -33,19 +38,19 @@ class ServiceImplTest {
     @Mock
     private CommonUtil commonUtil;
 
-//    @Test
-    void calculatorTest(){
+    //    @Test
+    void calculatorTest() {
         int a = 10;
         int b = 20;
 
-        assertEquals(30,a+b,"Calculator Test Failed");
+        assertEquals(30, a + b, "Calculator Test Failed");
     }
 
     @Test
     void updateTodoTest() throws Exception {
         //Sample Test Data:
-        TodoDto todoDto = new TodoDto(1,"Test Data", LocalDate.now().plusYears(1), false);
-        Todo todoModel = new Todo(1,"Test Data", LocalDate.now().plusYears(1), false);
+        TodoDto todoDto = new TodoDto(1, "Test Data", LocalDate.now().plusYears(1), false);
+        Todo todoModel = new Todo(1, "Test Data", LocalDate.now().plusYears(1), false);
         Optional<Todo> todoOptional = Optional.of(todoModel);
 
         //Stubs example:
@@ -62,6 +67,6 @@ class ServiceImplTest {
         assertEquals(todoDto, resultDto, "Result not matching with expected dto data");
 
         verify(todoRepository, times(1)).findById(anyInt());
-        verify(todoRepository,times(1)).save(any(Todo.class));
+        verify(todoRepository, times(1)).save(any(Todo.class));
     }
 }
