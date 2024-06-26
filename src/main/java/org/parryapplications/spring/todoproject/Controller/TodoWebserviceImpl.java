@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.parryapplications.spring.todoproject.customAnnotations.TimeComplexityCalculator;
+import org.parryapplications.spring.todoproject.dto.ResultSet;
 import org.parryapplications.spring.todoproject.dto.TodoDto;
 import org.parryapplications.spring.todoproject.service.TodoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,42 +30,42 @@ public class TodoWebserviceImpl {
     @PostMapping("/todos")
     @PreAuthorize("#todoDto.username == authentication.name")
     @TimeComplexityCalculator //AOP
-    public TodoDto createTodo(@Valid @RequestBody TodoDto todoDto) {
+    public ResultSet<TodoDto> createTodo(@Valid @RequestBody TodoDto todoDto) {
         return todoService.createTodo(todoDto);
     }
 
     @GetMapping("{username}/todos/{id}")
     @PreAuthorize("#username == authentication.name")
     @TimeComplexityCalculator //AOP
-    public TodoDto getTodoById(@PathVariable @NotNull @Size(min = 5) String username, @PathVariable("id") @NotNull Integer id) {
+    public ResultSet<TodoDto> getTodoById(@PathVariable @NotNull @Size(min = 5) String username, @PathVariable("id") @NotNull Integer id) {
         return todoService.getTodoById(username, id);
     }
 
     @GetMapping("/{username}/todos")
     @PreAuthorize("#username == authentication.name")
     @TimeComplexityCalculator //AOP
-    public List<TodoDto> getAllTodos(@PathVariable @NotNull @Size(min = 5) String username) {
+    public ResultSet<List<TodoDto>> getAllTodos(@PathVariable @NotNull @Size(min = 5) String username) {
         return todoService.getAllTodos(username);
     }
 
     @DeleteMapping("/{username}/todos/{id}")
     @PreAuthorize("#username == authentication.name")
     @TimeComplexityCalculator //AOP
-    public String deleteTodoById(@PathVariable @NotNull @Size(min = 5) String username, @PathVariable("id") Integer id) {
+    public ResultSet<String> deleteTodoById(@PathVariable @NotNull @Size(min = 5) String username, @PathVariable("id") Integer id) {
         return todoService.deleteTodoById(username, id);
     }
 
     @PutMapping("/todos")
     @PreAuthorize("#todoDto.username == authentication.name")
     @TimeComplexityCalculator //AOP
-    public TodoDto updateTodo(@Valid @RequestBody TodoDto todoDto) {
+    public ResultSet<TodoDto> updateTodo(@Valid @RequestBody TodoDto todoDto) {
         return todoService.updateTodo(todoDto);
     }
 
     @DeleteMapping("/{username}/todos")
     @PreAuthorize("#username == authentication.name")
     @TimeComplexityCalculator //AOP
-    public String deleteAllTodosByUsername(@PathVariable @NotNull @Size(min = 5) String username) {
+    public ResultSet<String> deleteAllTodosByUsername(@PathVariable @NotNull @Size(min = 5) String username) {
         return todoService.deleteAllTodosByUsername(username);
     }
 
@@ -72,7 +73,7 @@ public class TodoWebserviceImpl {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/allTodos")
     @TimeComplexityCalculator //AOP
-    public String deleteAllTodos_AdminsOnly() {
+    public ResultSet<String> deleteAllTodos_AdminsOnly() {
         return todoService.deleteAllTodos_AdminsOnly();
     }
 
@@ -80,7 +81,7 @@ public class TodoWebserviceImpl {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/allTodos")
     @TimeComplexityCalculator //AOP
-    public List<TodoDto> getAllTodos_AdminsOnly() {
+    public ResultSet<List<TodoDto>> getAllTodos_AdminsOnly() {
         return todoService.getAllTodos_AdminsOnly();
     }
 }

@@ -1,6 +1,7 @@
 package org.parryapplications.spring.todoproject.service;
 
 import jakarta.transaction.Transactional;
+import org.parryapplications.spring.todoproject.dto.ResultSet;
 import org.parryapplications.spring.todoproject.dto.TodoDto;
 import org.parryapplications.spring.todoproject.model.Todo;
 import org.parryapplications.spring.todoproject.repository.TodoJpaRepository;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,110 +37,119 @@ public class TodoServiceImpl {
 //        todoList.add(new Todo(3,"Machine Learning", LocalDate.now().plusYears(3L),false));
 //    }
 
-    public TodoDto createTodo(TodoDto todoDto) {
+    public ResultSet<TodoDto> createTodo(TodoDto todoDto) {
+        ResultSet<TodoDto> resultSet = new ResultSet<>();
+        Todo todoModel = null;
         try {
-            Todo todoModel = todoRepository.save(commonUtil.convertTodoDtoToTodoModel(todoDto));
+            todoModel = todoRepository.save(commonUtil.convertTodoDtoToTodoModel(todoDto));
             logger.info("Todo created successfully");
-            return commonUtil.convertTodoModelToTodoDto(todoModel);
+
+            resultSet.setData(commonUtil.convertTodoModelToTodoDto(todoModel));
+            resultSet.setSuccessCount(1);
+            resultSet.setSuccessMessage("Todo created successfully");
         } catch (Exception e) {
-            logger.error("Error while creating todo : ", e);
-        }
-        return null;
-    }
-
-    public TodoDto getTodoById(String username, Integer id) {
-        Optional<Todo> opTodo = todoRepository.findById(id);
-        if (opTodo.isPresent() && opTodo.get().getUsername().equals(username)) {
-            logger.info("Retrieved Todo By Id");
-            return commonUtil.convertTodoModelToTodoDto(opTodo.get());
+            logger.error("Error while creating todo :: {}", e.getMessage());
+            resultSet.setData(null);
+            resultSet.setExceptionCount(1);
+            resultSet.setExceptionMessage("Error while creating todo, Please try again later.");
         }
 
-        logger.info("No todo with ID: " + id + " found from your Data");
-        return new TodoDto();//sending empty object back
-
-        //        Predicate<? super Todo> predicate = todo -> todo.getId().equals(id);
-//        return todoList.stream().filter(predicate).findAny().orElse(null);
+        return resultSet;
     }
 
-    public List<TodoDto> getAllTodos(String username) {
-        logger.info("Retrieving all Todos");
-        List<TodoDto> list = todoRepository.findByUsername(username).stream().map(commonUtil::convertTodoModelToTodoDto).toList();
-        return list;
-    }
-
-    public String deleteTodoById(String username, Integer id) {
+    public ResultSet<TodoDto> getTodoById(String username, Integer id) {
         try {
-            if (getTodoById(username, id).getId() != null) {
+            Optional<Todo> opTodo = todoRepository.findById(id);
+            if (opTodo.isPresent()) {
+                logger.info("Retrieved Todo By Id");
+                return new ResultSet<>(commonUtil.convertTodoModelToTodoDto(opTodo.get()), 1, "Todo retrieved successfully");
+            }
+        } catch (Exception e) {
+            logger.error("Error while retrieving todo with id:{} of User:{} \n Exception :: {}", id, username, e.getMessage());
+            return new ResultSet<>("Error while retrieving Todo", 1);
+        }
+        logger.info("No todo with ID: {} found", id);
+        return new ResultSet<>(1, "No todo found");//sending empty object back
+    }
+
+    public ResultSet<List<TodoDto>> getAllTodos(String username) {
+        List<TodoDto> list = null;
+        try {
+            list = todoRepository.findByUsername(username).stream().map(commonUtil::convertTodoModelToTodoDto).toList();
+        } catch (Exception e) {
+            logger.error("Error while retrieving all todos of User :: {}", e.getMessage());
+            return new ResultSet<>("Error while retrieving Todos", 1);
+        }
+        logger.info("Retrieved all Todos");
+        return new ResultSet<>(list, 1, "Todos retrieved successfully");
+    }
+
+    public ResultSet<String> deleteTodoById(String username, Integer id) {
+        try {
+            if (getTodoById(username, id).getData().getId() != null) {
                 todoRepository.deleteById(id);
-                logger.info("Todo deleted successfully");
             } else {
                 logger.info("Todo with id:{}, not found!", id);
-                return "Todo with ID: " + id + ", not found!";
+                return new ResultSet<>(1, "No todo found");
             }
-//            todoList.removeIf((todo) -> todo.getId().equals(id));
         } catch (Exception e) {
             logger.error("Error while delete todo id : {} :: {} ", id, e.getMessage());
-            return "Error while deleting todo id : " + id;
+            return new ResultSet<>("Error while deleting Todo", 1);
         }
-
-        return id + " : Todo Deleted Successfully";
+        logger.info("Todo with ID: {}, Deleted Successfully", id);
+        return new ResultSet<>(1, "Todo deleted successfully");
     }
 
-    public TodoDto updateTodo(TodoDto todoDto) {
+    public ResultSet<TodoDto> updateTodo(TodoDto todoDto) {
+        Todo todoModel = null;
         try {
-            TodoDto todoModelById = getTodoById(todoDto.getUsername(), todoDto.getId());
+            TodoDto todoModelById = getTodoById(todoDto.getUsername(), todoDto.getId()).getData();
 
-            //Checking if this todo is existed for modify operation:
             if (!ObjectUtils.isEmpty(todoModelById)) {
-                logger.info("Updating Todo...");
-                Todo todoModel = todoRepository.save(commonUtil.convertTodoDtoToTodoModel(todoDto));
-                logger.info("Todo updated successfully");
-                return commonUtil.convertTodoModelToTodoDto(todoModel);
-//            todoList.remove(todoById);
-//            todoList.add(todo);
-//            return todo;
+                todoModel = todoRepository.save(commonUtil.convertTodoDtoToTodoModel(todoDto));
+            } else {
+                logger.info("Todo with id:{}, not found", todoDto.getId());
+                return new ResultSet<>(1, "No todo found");
             }
         } catch (Exception e) {
-            logger.error("Error updating todo : {} ", e.getMessage());
-            return null;
+            logger.error("Error updating todo : {} \n Exception : {} ", todoDto, e.getMessage());
+            return new ResultSet<>("Error while updating Todo", 1);
         }
-        return null;
+        logger.info("Todo : {}, Updated successfully", todoDto);
+        return new ResultSet<>(commonUtil.convertTodoModelToTodoDto(todoModel), 1, "Todo updated successfully");
     }
 
     @Transactional
-    public String deleteAllTodosByUsername(String username) {
+    public ResultSet<String> deleteAllTodosByUsername(String username) {
         int count = 0;
         try {
             count = todoRepository.deleteAllByUsername(username);
 
-
-            if (count > 0)
-                logger.info(count + " - Todos Count have been deleted");
+            if (count > 0) logger.info("{} Todos have been deleted", count);
             else {
                 logger.info("No Todos existed from {}", username);
-                return count + " Todos found, Nothing for deletion";
+                return new ResultSet<>(1, count + " Todos found, Nothing for deletion");
             }
         } catch (Exception e) {
-            logger.error("Error while deleting all todos by username :: ", e);
-            return "Error while deleting all todos by username";
+            logger.error("Error while deleting all todos by username :: {}", e.getMessage());
+            return new ResultSet<>("Error while deleting all Todos", 1);
         }
-
-        return count + " Todos found, All Deleted Successfully";
+        return new ResultSet<>(1, count + " Todos found, All deleted successfully");
     }
 
     @Transactional
-    public String deleteAllTodos_AdminsOnly() {
+    public ResultSet<String> deleteAllTodos_AdminsOnly() {
         try {
             todoRepository.deleteAll();
-            logger.info("All Todos deleted successfully");
         } catch (Exception e) {
-            logger.error("Error while deleting all todos :: ", e);
-            return "Error while deleting all todos";
+            logger.error("Error while deleting all users todos :: {}", e.getMessage());
+            return new ResultSet<>("Error while deleting all Users Todos", 1);
         }
-        return "All Todos deleted successfully";
+        logger.info("All Users Todos deleted successfully");
+        return new ResultSet<>(1, "All Users Todos deleted successfully");
     }
 
-    public List<TodoDto> getAllTodos_AdminsOnly() {
+    public ResultSet<List<TodoDto>> getAllTodos_AdminsOnly() {
         List<TodoDto> resultTodos = new ArrayList<>();
         try {
             for (Todo model : todoRepository.findAll()) {
@@ -148,10 +157,10 @@ public class TodoServiceImpl {
                 resultTodos.add(dto);
             }
         } catch (Exception e) {
-            logger.error("Error while retrieving all todos :: ", e);
-            return Collections.emptyList();
+            logger.error("Error while retrieving all users todos :: {}", e.getMessage());
+            return new ResultSet<>("Error while retrieving all Users Todos", 1);
         }
-        logger.info("All Todos retrieved successfully");
-        return resultTodos;
+        logger.info("All Users Todos retrieved successfully");
+        return new ResultSet<>(resultTodos, 1, "All Users Todos retrieved successfully");
     }
 }

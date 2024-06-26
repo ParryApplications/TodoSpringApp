@@ -8,24 +8,30 @@ import org.aspectj.lang.annotation.Pointcut;
 public class PointcutConfigurations {
 
     @Pointcut("execution(* org.parryapplications.spring.todoproject.service.TodoServiceImpl.*(..))")
-    public void TodoServiceImplMethodsConfig() {}
+    public void TodoServiceImplMethodsConfig() {
+    }
 
 
     @Pointcut("execution(org.parryapplications.spring.todoproject.dto.TodoDto org.parryapplications.spring.todoproject.Controller.TodoWebserviceImpl.*(..))")
-    public void TodoWebserviceImplMethod_RtTodoDtoConfig() {}
+    public void TodoWebserviceImplMethod_RtTodoDtoConfig() {
+    }
 
 
     @Pointcut("execution(java.util.List<org.parryapplications.spring.todoproject.dto.TodoDto> org.parryapplications.spring.todoproject.Controller.TodoWebserviceImpl.*(..))")
-    public void TodoWebserviceImplMethod_RtListOfTodoDtosConfig() {}
+    public void TodoWebserviceImplMethod_RtListOfTodoDtosConfig() {
+    }
 
     @Pointcut("execution(* org.parryapplications.spring.todoproject.repository.TodoJpaRepository.*(..))")
-    public void TodoJpaRepositoryMethodConfig() {}
+    public void TodoJpaRepositoryMethodConfig() {
+    }
 
 
     @Pointcut("@annotation(org.parryapplications.spring.todoproject.customAnnotations.TimeComplexityCalculator)")
-    public void TimeComplexityCalculatorConfig() {}
+    public void TimeComplexityCalculatorConfig() {
+    }
 
     //Not in Use
     @Pointcut("bean(*Service*)")
-    public void aspectAllBeansContainsServiceInName() {}
+    public void aspectAllBeansContainsServiceInName() {
+    }
 }

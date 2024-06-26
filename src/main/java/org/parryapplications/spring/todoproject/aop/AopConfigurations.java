@@ -23,7 +23,7 @@ public class AopConfigurations {
 
     @Before("org.parryapplications.spring.todoproject.aop.PointcutConfigurations.TodoServiceImplMethodsConfig()")
     public void loggingBeforeBizLogicExecuted(JoinPoint joinPoint) {
-        logger.info("{} method starting executing...", joinPoint);
+        logger.info("{} method start executing...", joinPoint);
 //        logger.info("{} method starting executing...",joinPoint.getSignature());
 //        logger.info("{} method starting executing...",joinPoint.getSourceLocation());
 //        logger.info("{} method starting executing...",joinPoint.getTarget());
@@ -34,7 +34,7 @@ public class AopConfigurations {
     //TODO: Note: Below method calling but not impacting the response (Need to check why response not modified):
     @AfterReturning(pointcut = "org.parryapplications.spring.todoproject.aop.PointcutConfigurations.TodoWebserviceImplMethod_RtTodoDtoConfig()", returning = "successResult")
     public ResultSet<TodoDto> addingResultSetToSuccessResult(TodoDto successResult) {
-//        logger.info("addingResultSetToSuccessResult() executed");
+        logger.info("addingResultSetToSuccessResult() executed");
         if (!ObjectUtils.isEmpty(successResult)) {
             return new ResultSet<>(successResult, 1, "Operation completed successfully");
         }
@@ -45,7 +45,7 @@ public class AopConfigurations {
     //TODO: Note: Below method calling but not impacting the response (Need to check why response not modified):
     @AfterReturning(pointcut = "org.parryapplications.spring.todoproject.aop.PointcutConfigurations.TodoWebserviceImplMethod_RtListOfTodoDtosConfig()", returning = "successResults")
     public ResultSet<List<TodoDto>> addingResultSetsToSuccessResults(List<TodoDto> successResults) {
-//        logger.info("addingResultSetsToSuccessResults() executed");
+        logger.info("addingResultSetsToSuccessResults() executed");
         if (!CollectionUtils.isEmpty(successResults))
             return new ResultSet<>(successResults, successResults.size(), "Operations completed successfully");
 

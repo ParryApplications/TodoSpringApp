@@ -49,8 +49,8 @@ class ServiceImplTest {
     @Test
     void updateTodoTest() throws Exception {
         //Sample Test Data:
-        TodoDto todoDto = new TodoDto(1, "Test Data", LocalDate.now().plusYears(1), false);
-        Todo todoModel = new Todo(1, "Test Data", LocalDate.now().plusYears(1), false);
+        TodoDto todoDto = new TodoDto(1, "Test Data", LocalDate.now().plusYears(1), false, "parry");
+        Todo todoModel = new Todo(1, "Test Data", LocalDate.now().plusYears(1), false,"parry");
         Optional<Todo> todoOptional = Optional.of(todoModel);
 
         //Stubs example:
@@ -60,7 +60,7 @@ class ServiceImplTest {
         when(todoRepository.save(any(Todo.class))).thenReturn(todoModel);
 
         //Invocation of method, which dev needs to test:
-        TodoDto resultDto = todoServiceImpl.updateTodo(todoDto);
+        TodoDto resultDto = todoServiceImpl.updateTodo(todoDto).getData();
 
         //Verification after test case ran:
         assertNotNull(resultDto);

@@ -5,19 +5,14 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.nimbusds.jwt.JWTClaimsSet;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -57,16 +52,16 @@ public class JwtSecurityConfiguration {
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public UserDetailsService userDetailsService(DataSource dataSource){
+    public UserDetailsService userDetailsService(DataSource dataSource) {
 
         JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
 
-        if(!jdbcUserDetailsManager.userExists("parry")) {
+        if (!jdbcUserDetailsManager.userExists("parry")) {
             UserDetails user = User.withUsername("parry")
                     .password("user")
                     .passwordEncoder(bCryptPasswordEncoder()::encode)
@@ -75,7 +70,7 @@ public class JwtSecurityConfiguration {
             jdbcUserDetailsManager.createUser(user);
         }
 
-        if(!jdbcUserDetailsManager.userExists("roots")) {
+        if (!jdbcUserDetailsManager.userExists("roots")) {
             UserDetails admin = User.withUsername("roots")
                     .password("admin")
                     .passwordEncoder(bCryptPasswordEncoder()::encode)
@@ -88,7 +83,7 @@ public class JwtSecurityConfiguration {
     }
 
     @Bean
-    public DataSource dataSource(){
+    public DataSource dataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/todo_db");
@@ -117,13 +112,14 @@ public class JwtSecurityConfiguration {
 
     //Validating JWT using RSA public key:
     @Bean
-    public JwtDecoder jwtDecoder(RSAKey rsaKey) throws JOSEException {
-       return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
+    public JwtDecoder jwtDecoder(RSAKey rsaKey) throws JOSEException{
+        RSAPublicKey rsaPublicKey = rsaKey.toRSAPublicKey();
+        return NimbusJwtDecoder.withPublicKey(rsaPublicKey).build();
     }
 
     //Creating JWK(Json web keys) Source, used to validate the signature of JWT:
     @Bean
-    public JWKSource<SecurityContext> jwkSource(RSAKey rsaKey){
+    public JWKSource<SecurityContext> jwkSource(RSAKey rsaKey) {
         JWKSet jwkSet = new JWKSet(rsaKey);
         return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
     }
@@ -131,12 +127,12 @@ public class JwtSecurityConfiguration {
 
     //Creation of JWT, using Private RSA(Road safety Audit) key:
     @Bean
-    public JwtEncoder jwtEncoder(JWKSource<SecurityContext> securityContextJWKSource){
+    public JwtEncoder jwtEncoder(JWKSource<SecurityContext> securityContextJWKSource) {
         return new NimbusJwtEncoder(securityContextJWKSource);
     }
 
     //creating Token:
-    public JwtClaimsSet createToken(Authentication authentication){
+    public JwtClaimsSet createToken(Authentication authentication) {
         return JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(Instant.now())
@@ -149,8 +145,6 @@ public class JwtSecurityConfiguration {
     private String createScope_Authorities(Authentication authentication) {
         return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
     }
-
-
 
 
 }

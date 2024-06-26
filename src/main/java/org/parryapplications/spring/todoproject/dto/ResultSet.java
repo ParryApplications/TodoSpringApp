@@ -12,10 +12,20 @@ public class ResultSet<T> {
     public ResultSet() {
     }
 
+    public ResultSet(int successCount, String successMessage) {
+        this.successCount = successCount;
+        this.successMessage = successMessage;
+    }
+
     public ResultSet(T data, int successCount, String successMessage) {
         this.data = data;
         this.successCount = successCount;
         this.successMessage = successMessage;
+    }
+
+    public ResultSet(String errorMessage, int errorCount) {
+        this.errorMessage = errorMessage;
+        this.errorCount = errorCount;
     }
 
     public ResultSet(String errorMessage, int errorCount, T data) {
