@@ -1,6 +1,5 @@
 package org.parryapplications.spring.todoproject.service;
 
-import jakarta.transaction.Transactional;
 import org.parryapplications.spring.todoproject.dto.ResultSet;
 import org.parryapplications.spring.todoproject.dto.TodoDto;
 import org.parryapplications.spring.todoproject.model.Todo;
@@ -10,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -37,6 +37,7 @@ public class TodoServiceImpl {
 //        todoList.add(new Todo(3,"Machine Learning", LocalDate.now().plusYears(3L),false));
 //    }
 
+    @Transactional
     public ResultSet<TodoDto> createTodo(TodoDto todoDto) {
         ResultSet<TodoDto> resultSet = new ResultSet<>();
         Todo todoModel = null;
@@ -81,9 +82,10 @@ public class TodoServiceImpl {
             return new ResultSet<>("Error while retrieving Todos", 1);
         }
         logger.info("Retrieved all Todos");
-        return new ResultSet<>(list, 1, "Todos retrieved successfully");
+        return new ResultSet<>(list, list.size(), "Todos retrieved successfully");
     }
 
+    @Transactional
     public ResultSet<String> deleteTodoById(String username, Integer id) {
         try {
             if (getTodoById(username, id).getData().getId() != null) {
@@ -100,6 +102,7 @@ public class TodoServiceImpl {
         return new ResultSet<>(1, "Todo deleted successfully");
     }
 
+    @Transactional
     public ResultSet<TodoDto> updateTodo(TodoDto todoDto) {
         Todo todoModel = null;
         try {
@@ -161,6 +164,6 @@ public class TodoServiceImpl {
             return new ResultSet<>("Error while retrieving all Users Todos", 1);
         }
         logger.info("All Users Todos retrieved successfully");
-        return new ResultSet<>(resultTodos, 1, "All Users Todos retrieved successfully");
+        return new ResultSet<>(resultTodos, resultTodos.size(), "All Users Todos retrieved successfully");
     }
 }

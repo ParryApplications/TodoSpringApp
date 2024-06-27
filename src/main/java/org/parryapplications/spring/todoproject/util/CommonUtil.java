@@ -11,12 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommonUtil {
 
+    private final ObjectMapper objectMapper;
     Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 
-    private final ObjectMapper objectMapper;
-
     @Autowired
-    public CommonUtil(ObjectMapper objectMapper){
+    public CommonUtil(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
@@ -24,8 +23,8 @@ public class CommonUtil {
     public TodoDto convertTodoModelToTodoDto(Todo todo) {
         try {
             return objectMapper.convertValue(todo, TodoDto.class);
-        } catch(Exception e){
-            logger.error("Error while converting Todo model into Dto : {}",e.getMessage());
+        } catch (Exception e) {
+            logger.error("Error while converting Todo model into Dto : {}", e.getMessage());
         }
         return null;
     }
@@ -33,9 +32,9 @@ public class CommonUtil {
     //DTO to Model:
     public Todo convertTodoDtoToTodoModel(TodoDto todoDto) {
         try {
-        return objectMapper.convertValue(todoDto, Todo.class);
-        } catch(Exception e){
-            logger.error("Error while converting Todo Dto into Model : {}",e.getMessage());
+            return objectMapper.convertValue(todoDto, Todo.class);
+        } catch (Exception e) {
+            logger.error("Error while converting Todo Dto into Model : {}", e.getMessage());
         }
         return null;
     }

@@ -3,6 +3,7 @@ package org.parryapplications.spring.todoproject.dto;
 
 import jakarta.validation.constraints.NotNull;
 
+//NOT IN USE:
 public class AuthenticationDto {
     @NotNull
     private String username;

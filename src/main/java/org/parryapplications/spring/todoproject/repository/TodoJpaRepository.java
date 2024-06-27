@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface TodoJpaRepository extends JpaRepository<Todo, Integer> {
     List<Todo> findByUsername(String username);
+
     int deleteAllByUsername(String username);
 }

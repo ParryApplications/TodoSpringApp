@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.Authentication;
@@ -33,7 +32,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Configuration
-@EnableMethodSecurity
+//@EnableMethodSecurity
 public class JwtSecurityConfiguration {
 
     @Value("${spring.datasource.password}")
@@ -64,7 +63,7 @@ public class JwtSecurityConfiguration {
         if (!jdbcUserDetailsManager.userExists("parry")) {
             UserDetails user = User.withUsername("parry")
                     .password("user")
-                    .passwordEncoder(bCryptPasswordEncoder()::encode)
+                    .passwordEncoder(bCryptPasswordEncoder()::encode)//hashing
                     .roles("USER")
                     .build();
             jdbcUserDetailsManager.createUser(user);
@@ -112,7 +111,7 @@ public class JwtSecurityConfiguration {
 
     //Validating JWT using RSA public key:
     @Bean
-    public JwtDecoder jwtDecoder(RSAKey rsaKey) throws JOSEException{
+    public JwtDecoder jwtDecoder(RSAKey rsaKey) throws JOSEException {
         RSAPublicKey rsaPublicKey = rsaKey.toRSAPublicKey();
         return NimbusJwtDecoder.withPublicKey(rsaPublicKey).build();
     }
@@ -136,7 +135,7 @@ public class JwtSecurityConfiguration {
         return JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(Instant.now())
-                .expiresAt(Instant.now().plusSeconds(60))
+                .expiresAt(Instant.now().plusSeconds(300))//5 minutes
                 .subject(authentication.getName())
                 .claim("scope", createScope_Authorities(authentication))
                 .build();

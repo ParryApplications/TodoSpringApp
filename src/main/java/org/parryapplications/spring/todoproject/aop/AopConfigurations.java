@@ -39,7 +39,7 @@ public class AopConfigurations {
             return new ResultSet<>(successResult, 1, "Operation completed successfully");
         }
 
-        return new ResultSet<>(successResult,0, "Operation completed successfully");
+        return new ResultSet<>(successResult, 0, "Operation completed successfully");
     }
 
     //TODO: Note: Below method calling but not impacting the response (Need to check why response not modified):
@@ -49,7 +49,7 @@ public class AopConfigurations {
         if (!CollectionUtils.isEmpty(successResults))
             return new ResultSet<>(successResults, successResults.size(), "Operations completed successfully");
 
-        return new ResultSet<>(successResults,0, "Operations completed successfully");
+        return new ResultSet<>(successResults, 0, "Operations completed successfully");
     }
 
     @AfterThrowing(pointcut = "org.parryapplications.spring.todoproject.aop.PointcutConfigurations.TodoJpaRepositoryMethodConfig()", throwing = "exceptionHandler")
@@ -68,7 +68,7 @@ public class AopConfigurations {
 
         long finalCalculatedTime = Duration.between(startTime, endTime).toMillis();
 
-        logger.info("{} API's Method took {}ms time to complete the request",proceedingJoinPoint,finalCalculatedTime);
+        logger.info("{} API's Method took {}ms time to complete the request", proceedingJoinPoint, finalCalculatedTime);
 
         return result;
     }

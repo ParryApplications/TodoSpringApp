@@ -15,17 +15,13 @@ import org.parryapplications.spring.todoproject.util.CommonUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 /**
  * This Test class contains test cases of failing Repository to test the working of src/main/java/org/parryapplications/spring/todoproject/aop/AopConfigurations.java/loggingExceptionOnDaoLayer
@@ -51,8 +47,8 @@ class JpaRepositoryTest {
 
     @Test
     void saveTodoTest() throws Exception {
-        Todo todoModel = new Todo(2, "Test Data", LocalDate.now().plusYears(1), false,"parry");
-        TodoDto todoDto = new TodoDto(2, "Test Data", LocalDate.now().plusYears(1), false,"parry");
+        Todo todoModel = new Todo(2, "Test Data", LocalDate.now().plusYears(1), false, "parry");
+        TodoDto todoDto = new TodoDto(2, "Test Data", LocalDate.now().plusYears(1), false, "parry");
 //        TodoDto todoDto = commonUtil.convertTodoModelToTodoDto(todoModel);
 
         when(commonUtil.convertTodoDtoToTodoModel(todoDto)).thenReturn(todoModel);
@@ -62,7 +58,7 @@ class JpaRepositoryTest {
         TodoDto savedTodo = todoServiceImpl.createTodo(todoDto).getData();
 
         // Assert
-        assertEquals(todoDto,savedTodo);
+        assertEquals(todoDto, savedTodo);
 
         // Verify that save method was called on todoJpaRepository with todoModel
 //        verify(todoJpaRepository).save(todoModel);
@@ -71,8 +67,8 @@ class JpaRepositoryTest {
     @Transactional
     @Test
     void saveMethodFailingTest() throws Exception {
-        Todo todoModel = new Todo(2, "Test Data", LocalDate.now().plusYears(1), false,"parry");
-        TodoDto todoDto = new TodoDto(2, "Test Data", LocalDate.now().plusYears(1), false,"parry");
+        Todo todoModel = new Todo(2, "Test Data", LocalDate.now().plusYears(1), false, "parry");
+        TodoDto todoDto = new TodoDto(2, "Test Data", LocalDate.now().plusYears(1), false, "parry");
 //        TodoDto todoDto = commonUtil.convertTodoModelToTodoDto(todoModel);
 
 //        doThrow(DataAccessException.class).when(todoJpaRepository).save(todoModel);
