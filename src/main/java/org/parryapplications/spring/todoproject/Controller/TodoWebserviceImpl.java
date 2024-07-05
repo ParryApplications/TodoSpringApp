@@ -10,6 +10,7 @@ import org.parryapplications.spring.todoproject.service.TodoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,13 @@ public class TodoWebserviceImpl {
     @Autowired
     public TodoWebserviceImpl(TodoServiceImpl todoService) {
         this.todoService = todoService;
+    }
+
+    //Mainly this is for health checks:
+    @GetMapping("/")
+    public String rootTodoUrl(Authentication authentication){
+//        System.out.println(authentication);
+        return "Hello Oauth2";
     }
 
     @PostMapping("/todos")

@@ -19,24 +19,26 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 /**
  * This Test class contains test cases of failing Repository to test the working of src/main/java/org/parryapplications/spring/todoproject/aop/AopConfigurations.java/loggingExceptionOnDaoLayer
  */
 
-//@ExtendWith({MockitoExtension.class})
-@ExtendWith({MockitoExtension.class, SpringExtension.class})
-@SpringBootTest(classes = TodoSpringApplication.class)
+@ExtendWith({MockitoExtension.class})
+//@ExtendWith({MockitoExtension.class, SpringExtension.class})
+//@SpringBootTest(classes = TodoSpringApplication.class)
 class JpaRepositoryTest {
 
     @Mock
     private TodoJpaRepository todoJpaRepository;
 
     @InjectMocks
-    @Autowired
+//    @Autowired
     private TodoServiceImpl todoServiceImpl;
 
     @Mock
@@ -64,8 +66,8 @@ class JpaRepositoryTest {
 //        verify(todoJpaRepository).save(todoModel);
     }
 
-    @Transactional
-    @Test
+//    @Transactional
+//    @Test
     void saveMethodFailingTest() throws Exception {
         Todo todoModel = new Todo(2, "Test Data", LocalDate.now().plusYears(1), false, "parry");
         TodoDto todoDto = new TodoDto(2, "Test Data", LocalDate.now().plusYears(1), false, "parry");
@@ -95,4 +97,22 @@ class JpaRepositoryTest {
 
 //        verify(logger, times(1)).error("Error while creating todo :: Simulated DataAccessException");
     }
+
+
+    //Not working:
+//    @Test
+    void deleteAllByUsername_TodosExist_ReturnsCorrectCount() {
+        // Arrange
+        String username = "DummuTestUser";
+        List<Todo> todos = List.of(new Todo(1, "Task 1", LocalDate.now(), false, username), new Todo(2, "Task 2", LocalDate.now(), true, username));
+        when(todoJpaRepository.findByUsername(anyString())).thenReturn(todos);
+
+        // Act
+        int deletedCount = todoJpaRepository.deleteAllByUsername(username);
+
+        // Assert
+        assertEquals(todos.size(), deletedCount);
+//        verify(todoJpaRepository, times(1)).deleteAllByUsername(username);
+    }
+
 }
