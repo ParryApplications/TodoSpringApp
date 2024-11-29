@@ -29,11 +29,11 @@ public class TodoWebserviceImpl {
     }
 
     //Mainly this is for health checks:
-    @GetMapping("/")
-    public String rootTodoUrl(Authentication authentication){
-//        System.out.println(authentication);
-        return "Hello Oauth2";
-    }
+//    @GetMapping("/")
+//    public String rootTodoUrl(Authentication authentication){
+////        System.out.println(authentication);
+//        return "Hello Oauth2";
+//    }
 
     @PostMapping("/todos")
     @PreAuthorize("#todoDto.username == authentication.name")

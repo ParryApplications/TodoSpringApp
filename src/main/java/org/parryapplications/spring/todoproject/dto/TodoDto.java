@@ -11,6 +11,7 @@ public class TodoDto {
     @Size(min = 5)
     private String description;
     @Future
+    @NotNull
     private LocalDate targetedDate;
     private boolean isCompleted;
     @NotNull

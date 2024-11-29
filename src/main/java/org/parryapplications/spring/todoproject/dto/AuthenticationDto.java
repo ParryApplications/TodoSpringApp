@@ -10,9 +10,6 @@ public class AuthenticationDto {
     @NotNull
     private String password;
 
-    public AuthenticationDto() {
-    }
-
     public String getUsername() {
         return username;
     }
