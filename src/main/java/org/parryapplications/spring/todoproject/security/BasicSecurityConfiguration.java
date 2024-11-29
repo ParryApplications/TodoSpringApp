@@ -1,5 +1,6 @@
 package org.parryapplications.spring.todoproject.security;
 
+//TODO: It requires spring-boot-starter-security to be added under the dependency
 //@Configuration
 //public class BasicSecurityConfiguration {
 //

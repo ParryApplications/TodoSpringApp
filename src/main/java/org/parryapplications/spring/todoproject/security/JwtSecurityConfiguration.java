@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -21,6 +24,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 import java.security.KeyPair;
@@ -32,7 +37,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Configuration
-//@EnableMethodSecurity
 public class JwtSecurityConfiguration {
 
     @Value("${spring.datasource.password}")
@@ -40,16 +44,38 @@ public class JwtSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain customSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(req -> req.anyRequest().authenticated());
+//        httpSecurity.authorizeHttpRequests(
+//                req -> req.requestMatchers("/authentication").permitAll()
+//                        .anyRequest().authenticated());
 //        httpSecurity.authorizeHttpRequests(req -> req.requestMatchers("admins/todos/**").hasRole("ADMIN"));
-        httpSecurity.httpBasic(Customizer.withDefaults());
-//        httpSecurity.httpBasic(AbstractHttpConfigurer::disable);
-//        httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        httpSecurity.authorizeHttpRequests(req -> req.anyRequest().authenticated());//Every request should be authenticated
+        httpSecurity.httpBasic(Customizer.withDefaults());//Comment this line to disabled basic auth
+        httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         return httpSecurity.build();
     }
 
+    @Bean
+    public WebMvcConfigurer webMvcConfig() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                WebMvcConfigurer.super.addCorsMappings(registry);
+                registry.addMapping("/**").allowedMethods("*").allowedOrigins("http://localhost:3000");
+            }
+        };
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    /**
+     * Capable of strong hashing function
+     * @return
+     */
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -135,7 +161,7 @@ public class JwtSecurityConfiguration {
         return JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(Instant.now())
-                .expiresAt(Instant.now().plusSeconds(300))//5 minutes
+                .expiresAt(Instant.now().plusSeconds(3600))//5 minutes (For PROD)
                 .subject(authentication.getName())
                 .claim("scope", createScope_Authorities(authentication))
                 .build();
